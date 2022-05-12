@@ -202,7 +202,7 @@ class TrainSessionParameters(object):
         self.tensorboardLog = cfg[cfg.TENSORBOARD_LOG] if cfg[cfg.TENSORBOARD_LOG] is not None else False
 
         # ====================TRAINING==========================
-        self.filepath_to_save_models = out_folder_models + "/" + model_name + "." + self._session_name
+        self.filepath_to_save_models = os.path.join(out_folder_models,model_name + "." + self._session_name)
 
         if cfg[cfg.DATAFRAME_TR] is not None:
             self.csv_fname_train = abs_from_rel_path(cfg[cfg.DATAFRAME_TR], abs_path_cfg)
@@ -532,15 +532,15 @@ class TrainSessionParameters(object):
         self.out_fms_fpaths_val = []
         if self.out_preds_fnames_val is not None:  # standard behavior
             for case_i in range(self.n_cases_val):
-                fpaths_for_case_pred = out_folder_preds + "/" + self.out_preds_fnames_val[case_i]
+                fpaths_for_case_pred = os.path.join(out_folder_preds,self.out_preds_fnames_val[case_i])
                 self.out_preds_fpaths_val.append(fpaths_for_case_pred)
-                fpaths_for_case_fms = out_folder_fms + "/" + self.out_preds_fnames_val[case_i]
+                fpaths_for_case_fms = os.path.join(out_folder_fms,self.out_preds_fnames_val[case_i])
                 self.out_fms_fpaths_val.append(fpaths_for_case_fms)
         else:  # Names for predictions not given. Special handling...
             if self.n_cases_val > 1:  # Many cases, create corresponding namings for files.
                 for case_i in range(self.n_cases_val):
-                    self.out_preds_fpaths_val.append(out_folder_preds + "/pred_case" + str(case_i) + ".nii.gz")
-                    self.out_fms_fpaths_val.append(out_folder_preds + "/pred_case" + str(case_i) + ".nii.gz")
+                    self.out_preds_fpaths_val.append(os.path.join(out_folder_preds,"pred_case" + str(case_i) + ".nii.gz"))
+                    self.out_fms_fpaths_val.append(os.path.join(out_folder_preds,"pred_case" + str(case_i) + ".nii.gz"))
             else:  # Only one case. Just give the output prediction folder, the io.py will save output accordingly.
                 self.out_preds_fpaths_val.append(out_folder_preds)
                 self.out_fms_fpaths_val.append(out_folder_preds)

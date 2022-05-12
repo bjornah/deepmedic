@@ -97,7 +97,7 @@ def savePredImgToNiiWithOriginalHdr(labelImageCreatedByPredictions,
     filepathTarget = "PLACEHOLDER"
     nameForSavingPred = namesForSavingPreds[case_i]
     if os.path.isdir(nameForSavingPred) : # Only if names not given and it's only 1 case (see testSessionParams)
-        filepathTarget = nameForSavingPred + "/" + suffixToAdd + ".nii.gz"
+        filepathTarget = os.path.join(nameForSavingPred,suffixToAdd) + ".nii.gz"
     elif nameForSavingPred.endswith(".nii.gz") :
         filepathTarget = nameForSavingPred[:-7] + "_" + suffixToAdd + ".nii.gz"
     elif nameForSavingPred.endswith(".nii") :

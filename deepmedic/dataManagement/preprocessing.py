@@ -65,7 +65,7 @@ def itk_preprocessing(
     new_spacing: tuple = (1.0, 1.0, 1.0),
     normalize_z_zcore = True,
     ) -> sitk.Image:
-
+    
     data_itk = resample_volume(data_itk, new_spacing = new_spacing, interpolator = sitk.sitkLinear)
     logging.debug(f'volume resampled to {new_spacing} spacing in preprocessing')
 

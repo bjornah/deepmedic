@@ -130,15 +130,15 @@ class TestSessionParameters(object) :
         self.out_fms_fpaths = []
         if self.out_preds_fnames is not None:  # standard behavior
             for case_i in range(self.n_cases):
-                fpaths_for_case_pred = out_folder_preds + "/" + self.out_preds_fnames[case_i]
+                fpaths_for_case_pred = os.path.join(out_folder_preds,self.out_preds_fnames[case_i])
                 self.out_preds_fpaths.append(fpaths_for_case_pred)
-                fpaths_for_case_fms = out_folder_fms + "/" + self.out_preds_fnames[case_i]
+                fpaths_for_case_fms = os.path.join(out_folder_fms,self.out_preds_fnames[case_i])
                 self.out_fms_fpaths.append(fpaths_for_case_fms)
         else:  # Names for predictions not given. Special handling...
             if self.n_cases > 1:  # Many cases, create corresponding namings for files.
                 for case_i in range(self.n_cases):
-                    self.out_preds_fpaths.append(out_folder_preds + "/pred_case" + str(case_i) + ".nii.gz")
-                    self.out_fms_fpaths.append(out_folder_preds + "/pred_case" + str(case_i) + ".nii.gz")
+                    self.out_preds_fpaths.append(os.path.join(out_folder_preds,"pred_case" + str(case_i) + ".nii.gz"))
+                    self.out_fms_fpaths.append(os.path.join(out_folder_preds,"pred_case" + str(case_i) + ".nii.gz"))
             else:  # Only one case. Just give the output prediction folder, the io.py will save output accordingly.
                 self.out_preds_fpaths.append(out_folder_preds)
                 self.out_fms_fpaths.append(out_folder_preds)

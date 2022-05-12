@@ -39,19 +39,19 @@ def make_folders_for_test_session(absMainOutputFolder, sessionName):
     print("Creating necessary folders for testing session...")
     createMainOutputFolder(absMainOutputFolder)
     
-    folderForLogs = absMainOutputFolder + "/logs/"
+    folderForLogs = os.path.join(absMainOutputFolder,"logs/")
     createLogsFolder(folderForLogs)
     
-    folderForPredictions = absMainOutputFolder + "/predictions"
+    folderForPredictions = os.path.join(absMainOutputFolder,"predictions")
     createFolderForPredictions(folderForPredictions)
     
-    folderForSessionResults = folderForPredictions + "/" + sessionName
+    folderForSessionResults = os.path.join(folderForPredictions,sessionName)
     createFolderForSessionResults(folderForSessionResults)
     
-    folderForSegmAndProbMaps = folderForSessionResults + "/predictions/"
+    folderForSegmAndProbMaps = os.path.join(folderForSessionResults,"predictions/")
     createFolderForSegmAndProbMaps(folderForSegmAndProbMaps)
     
-    folderForFeatures = folderForSessionResults + "/features/"
+    folderForFeatures = os.path.join(folderForSessionResults,"features/")
     createFolderForFeatures(folderForFeatures)
     
     return [folderForLogs,
@@ -83,26 +83,26 @@ def make_folders_for_train_session(absMainOutputFolder, sessionName):
     print("Creating necessary folders for training session...")
     createMainOutputFolder(absMainOutputFolder)
     
-    folderForLogs = absMainOutputFolder + "/logs/"
+    folderForLogs = os.path.join(absMainOutputFolder,"logs/")
     createLogsFolder(folderForLogs)
         
-    folderForCnnModels = absMainOutputFolder + "/saved_models/"
+    folderForCnnModels = os.path.join(absMainOutputFolder,"saved_models/")
     createFolderForCnnModels(folderForCnnModels)
-    folderForSessionCnnModels = folderForCnnModels + "/" + sessionName + "/"
+    folderForSessionCnnModels = os.path.join(folderForCnnModels,sessionName)
     createFolderForSessionCnnModels(folderForSessionCnnModels)
     
-    folderForPredictions = absMainOutputFolder + "/predictions"
+    folderForPredictions = os.path.join(absMainOutputFolder,"predictions")
     createFolderForPredictions(folderForPredictions)
-    folderForSessionResults = folderForPredictions + "/" + sessionName
+    folderForSessionResults = os.path.join(folderForPredictions,sessionName)
     createFolderForSessionResults(folderForSessionResults)
-    folderForSegmAndProbMaps = folderForSessionResults + "/predictions/"
+    folderForSegmAndProbMaps = os.path.join(folderForSessionResults,"predictions/")
     createFolderForSegmAndProbMaps(folderForSegmAndProbMaps)
-    folderForFeatures = folderForSessionResults + "/features/"
+    folderForFeatures = os.path.join(folderForSessionResults,"features/")
     createFolderForFeatures(folderForFeatures)
     
-    folderForTensorboard = absMainOutputFolder + "/tensorboard/"
+    folderForTensorboard = os.path.join(absMainOutputFolder,"tensorboard/")
     createFolderForTensorboard(folderForTensorboard)
-    folderForSessionTensorboard = folderForTensorboard + "/" + sessionName + "/"
+    folderForSessionTensorboard = os.path.join(folderForTensorboard,sessionName)
     createFolderForSessionTensorboard(folderForSessionTensorboard)
     
     return [folderForLogs,
@@ -117,13 +117,13 @@ def makeFoldersNeededForCreateModelSession(absMainOutputFolder, modelName):
     print("Creating necessary folders for create-new-model session...")
     createMainOutputFolder(absMainOutputFolder)
     
-    folderForLogs = absMainOutputFolder + "/logs/"
+    folderForLogs = os.path.join(absMainOutputFolder,"logs/")
     createLogsFolder(folderForLogs)
     
-    folderForCnnModels = absMainOutputFolder + "/saved_models/"
+    folderForCnnModels = os.path.join(absMainOutputFolder,"saved_models/")
     createFolderForCnnModels(folderForCnnModels)
     
-    folderForSessionCnnModels = folderForCnnModels + "/" + modelName + "/"
+    folderForSessionCnnModels = os.path.join(folderForCnnModels,modelName)
     createFolderForSessionCnnModels(folderForSessionCnnModels)
     
     return [folderForLogs,

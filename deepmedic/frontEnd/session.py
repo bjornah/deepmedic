@@ -8,6 +8,7 @@
 from __future__ import absolute_import, print_function, division
 
 from deepmedic.logging import loggers
+import os
 
 class Session(object):
     
@@ -33,7 +34,7 @@ class Session(object):
     
     # Call only after calling make_output_folders()
     def setup_logger(self):
-        log_filepath = self._out_folder_logs + "/" + self._session_name + ".txt"
+        log_filepath = os.path.join(self._out_folder_logs,self._session_name + ".txt")
         # Create logger.
         self._log = loggers.Logger(log_filepath)
     

@@ -21,7 +21,7 @@ def abs_from_rel_path(pathGiven, absolutePathToWhereRelativePathRelatesTo):
             relativePathToWhatGiven = os.path.dirname(absolutePathToWhereRelativePathRelatesTo)
         else : #not file, not dir, exit.
             print("ERROR: in [func:returnAbsolutePathEvenIfRelativePathIsGiven()] Given path :", absolutePathToWhereRelativePathRelatesTo, " does not correspond to neither an existing file nor a directory. Exiting!"); exit(1)
-        return os.path.normpath(relativePathToWhatGiven + "/" + pathGiven)
+        return os.path.normpath(os.path.join(relativePathToWhatGiven,pathGiven))
 
 
 def checkIfAllElementsOfAListAreFilesAndExitIfNot(pathToTheListingFile, list1):
@@ -45,7 +45,7 @@ def parse_filelist(filelist_path, make_abs=False):
                 if (not make_abs) or os.path.isabs(path_to_file):
                     list1.append(os.path.normpath(path_to_file))
                 else:  # relative path to this listing-file.
-                    list1.append(os.path.normpath(path_to_folder_w_filelist + "/" + path_to_file))
+                    list1.append(os.path.normpath(os.path.join(path_to_folder_w_filelist,path_to_file)))
     return list1
 
 
