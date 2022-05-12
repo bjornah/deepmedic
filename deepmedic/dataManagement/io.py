@@ -10,17 +10,20 @@ from __future__ import absolute_import, division
 import os
 import nibabel as nib
 import numpy as np
+from .preprocessing import itk_preprocessing
+import SimpleITK as sitk
 
-
-def load_volume(filepath):
+def load_volume(filepath, normalize_z_zcore=True):
     # Loads the image specified by filepath.
     # Returns a 3D np array.
     # The image can be 2D, but will be returned as 3D, with dimensions =[x, y, 1]
     # It can also be 4D, of shape [x,y,z,1], and will be returned as 3D.
     # If it's 4D with 4th dimension > 1, assertion will be raised.
-    proxy = nib.load(filepath)
-    img = proxy.get_data()
-    proxy.uncache()
+    # proxy = nib.load(filepath)
+    img = sitk.ReadImage(filepath)
+    img = itk_preprocessing(img, normalize_z_zcore=normalize_z_zcore)
+    # img = proxy.get_data()
+    # proxy.uncache()
     
     if len(img.shape) == 2:
         # 2D image could have been given.
@@ -29,6 +32,8 @@ def load_volume(filepath):
         # 4D volumes could have been given. Often 3Ds are stored as 4Ds with 4th dim == 1.
         assert img.shape[3] == 1
         img = img[:,:,:,0]
+
+    
 
     return img
 

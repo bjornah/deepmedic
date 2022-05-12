@@ -430,7 +430,7 @@ def load_imgs_of_subject(log,
     for channel_i in range(n_channels):
         path_to_chan = paths_per_chan_per_subj[subj_i][channel_i]
         if path_to_chan != "-":  # normal case, filepath was given.
-            channel = load_volume(path_to_chan)
+            channel = load_volume(path_to_chan, normalize_z_zcore=True)
             
             if channels is None:
                 # Initialize the array in which all the channels for the patient will be placed.
@@ -445,7 +445,7 @@ def load_imgs_of_subject(log,
     # Load the class labels.
     if paths_to_lbls_per_subj is not None:
         path_to_lbl = paths_to_lbls_per_subj[subj_i]
-        gt_lbl_img = load_volume(path_to_lbl)
+        gt_lbl_img = load_volume(path_to_lbl, normalize_z_zcore=False)
 
         if gt_lbl_img.dtype.kind not in ['i', 'u']:
             dtype_gt_lbls = 'int16'
@@ -457,7 +457,7 @@ def load_imgs_of_subject(log,
 
     if paths_to_masks_per_subj is not None:
         path_to_roi_mask = paths_to_masks_per_subj[subj_i]
-        roi_mask = load_volume(path_to_roi_mask)
+        roi_mask = load_volume(path_to_roi_mask, normalize_z_zcore=False)
         
         if roi_mask.dtype.kind not in ['i','u']:
             dtype_roi_mask = 'int16'
@@ -474,7 +474,7 @@ def load_imgs_of_subject(log,
         for cat_i in range(n_sampl_categs):
             path_to_wmaps_for_this_cat_per_subj = paths_to_wmaps_per_sampl_cat_per_subj[cat_i]
             path_to_wmap_for_this_cat = path_to_wmaps_for_this_cat_per_subj[subj_i]
-            wmap_for_this_cat = load_volume(path_to_wmap_for_this_cat)
+            wmap_for_this_cat = load_volume(path_to_wmap_for_this_cat, normalize_z_zcore=False)
             if not np.all(wmap_for_this_cat >= 0):
                 raise ValueError("Negative values found in weightmap. Unexpected. Zero or positives allowed.")
             wmaps_to_sample_per_cat[cat_i] = wmap_for_this_cat

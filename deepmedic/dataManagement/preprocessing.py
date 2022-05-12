@@ -10,6 +10,91 @@ from __future__ import absolute_import, division
 import numpy as np
 import time
 
+#############################################################################################
+#############################################################################################
+#############################################################################################
+import SimpleITK as sitk
+import logging
+
+def clip_normalize( X : np.ndarray, 
+                    lower : np.float32, 
+                    upper : np.float32
+                    ) -> np.ndarray:
+
+    b, t = np.percentile(X, (lower, upper))
+    return np.clip(X, b, t)
+
+def z_score_normalization(data : np.ndarray, 
+                          mask : np.ndarray = None
+                          ) -> np.ndarray:
+    
+    if mask is not None:
+        mask_idx_tuple = np.nonzero(mask)
+        
+    else:
+        mask_idx_tuple = np.nonzero(np.ones_like(data))
+        
+    img_data = clip_normalize(data, lower=0.25, upper=99.75) 
+    # img_data = clip_normalize(data, lower=0, upper=100) # to avoid clipping away all data in case of repeated saving and loading data back and forth.
+    
+
+    mean = np.mean(img_data[mask_idx_tuple])
+    std = np.std(img_data[mask_idx_tuple])
+    
+    return (data - mean) / std
+
+def resample_volume(
+    img, 
+    new_spacing : tuple,
+    interpolator = sitk.sitkLinear
+    ) -> sitk.Image:
+
+    original_spacing = img.GetSpacing()
+    original_size = img.GetSize()
+    new_size = [int(round(osz*ospc/nspc)) for osz,ospc,nspc in zip(original_size, original_spacing, new_spacing)]
+    args = [img, new_size, sitk.Transform(), interpolator,
+            img.GetOrigin(), new_spacing, img.GetDirection(), 0,
+            # 3]
+            img.GetPixelID()]
+    logging.debug(f'args to Resample = {args}')
+    # logging.debug(f'len(args) = {len(args)}')
+    return sitk.Resample(*args)
+
+def itk_preprocessing(
+    data_itk: sitk.Image,
+    new_spacing: tuple = (1.0, 1.0, 1.0),
+    normalize_z_zcore = True,
+    ) -> sitk.Image:
+
+    data_itk = resample_volume(data_itk, new_spacing = new_spacing, interpolator = sitk.sitkLinear)
+    logging.debug(f'volume resampled to {new_spacing} spacing in preprocessing')
+
+    data_itk = sitk.Cast(data_itk, sitk.sitkFloat32)
+
+    data_np = sitk.GetArrayFromImage(data_itk)
+
+    if normalize_z_zcore==True:
+        data_np = z_score_normalization(data_np)
+
+    output_itk = sitk.GetImageFromArray(data_np, isVector=False)
+    output_itk.CopyInformation(data_itk)
+
+    img = sitk.GetArrayFromImage(output_itk).T # turn into numpy array and transpose to get rid of nifti/sitk idiosyncratic shape
+
+    return img
+
+def itk_postprocessing(
+    data_itk: sitk.Image,
+    new_spacing: tuple
+    ) -> sitk.Image:
+    data_itk = resample_volume(data_itk, new_spacing, interpolator = sitk.sitkLinear) # we use linear interpolation here since this step is performed before the prediction output is turned into a binary mask
+    logging.debug(f'volume resampled to {new_spacing} spacing in postprocessing')
+    return data_itk
+
+
+#############################################################################################
+#############################################################################################
+#############################################################################################
 
 def calc_border_int_of_3d_img(img_3d):
     border_int = np.mean([img_3d[0, 0, 0],
