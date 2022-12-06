@@ -13,7 +13,7 @@ import numpy as np
 from .preprocessing import itk_preprocessing
 import SimpleITK as sitk
 
-def load_volume(filepath, normalize_z_zcore=True):
+def load_volume(filepath, normalize_z_zcore=True, interpolation_function='linear'):
     # Loads the image specified by filepath.
     # Returns a 3D np array.
     # The image can be 2D, but will be returned as 3D, with dimensions =[x, y, 1]
@@ -21,7 +21,7 @@ def load_volume(filepath, normalize_z_zcore=True):
     # If it's 4D with 4th dimension > 1, assertion will be raised.
     # proxy = nib.load(filepath)
     img = sitk.ReadImage(filepath)
-    img = itk_preprocessing(img, normalize_z_zcore=normalize_z_zcore)
+    img = itk_preprocessing(img, normalize_z_zcore=normalize_z_zcore, interpolation_function=interpolation_function)
     # img = proxy.get_data()
     # proxy.uncache()
     
